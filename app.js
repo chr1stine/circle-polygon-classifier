@@ -5,7 +5,7 @@ const { spawn } = require('child_process') // для запуска питона
 const multer = require('multer');
 const sharp = require('sharp');
 
-const PORT = process.env.PORT ?? 80
+const PORT = process.env.PORT ?? 3000
 const app = express()
 
 app.use(express.static('.'))
