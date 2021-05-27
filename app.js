@@ -11,7 +11,7 @@ const app = express()
 app.use(express.static('.'))
 
 app.listen(PORT,()=>{
-	`Server listens on port ${PORT}`)
+	console.log(`Server listens on port ${PORT}`)
 })
 
 app.get('/', (req,res)=>{
