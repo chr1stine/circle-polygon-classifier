@@ -5,12 +5,14 @@ const { spawn } = require('child_process') // для запуска питона
 const multer = require('multer');
 const sharp = require('sharp');
 
-const PORT = 3000
+const PORT = process.env.PORT ?? 80
 const app = express()
 
 app.use(express.static('.'))
 
-app.listen(PORT)
+app.listen(PORT,()=>{
+	`Server listens on port ${PORT}`)
+})
 
 app.get('/', (req,res)=>{
     res.sendFile(path.resolce(__dirname, 'static','index.html'))

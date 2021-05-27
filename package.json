@@ -1,7 +1,7 @@
 {
   "name": "website",
   "version": "1.0.0",
-  "description": "",
+  "description": "Выпускная квалификационная работа",
   "main": "app.js",
   "scripts": {
     "test": "node app"
@@ -14,5 +14,13 @@
     "express": "^4.17.1",
     "multer": "^1.4.2",
     "sharp": "^0.28.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chr1stine/circle-polygon-classifier.git"
+  },
+  "bugs": {
+    "url": "https://github.com/chr1stine/circle-polygon-classifier/issues"
+  },
+  "homepage": "https://github.com/chr1stine/circle-polygon-classifier#readme"
 }
