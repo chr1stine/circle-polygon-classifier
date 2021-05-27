@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    <div id="container">
+        <label for="filepath">Загрузите изображение для классификации:</label>
+        <input name="filepath" type="file" onchange="handle_picture()"/>
+        <button id='classify_button' onclick="send_to_server()" disabled='true'>Классифицировать</button>
+        <canvas></canvas>
+        <p id='result'></p>
+    </div>
+    <script>
+        let image_loaded = false;
+
+        function handle_picture(){
+            try{
+                const input = document.querySelector('input[type="file"]')
+                let filename = input.files[0].name
+                const p = document.getElementById('result')
+                let allowed_extensions = ['.jpeg','.jpg','.png', '.jfif'];
+                
+                if (!allowed_extensions.includes(filename.substring(filename.indexOf('.')))){
+                    p.innerHTML = 'Ошибка при загрузке файла'
+                    p.setAttribute('style', 'color: red;')
+
+                    const canvas = document.querySelector('canvas')
+                    const context = canvas.getContext('2d')
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+
+                    image_loaded = false;
+                }
+                else{
+
+                    const reader = new FileReader()
+                    reader.onload = function(){
+                        const img = new Image();
+                        img.onload = function(){
+                            const canvas = document.querySelector('canvas')
+                            const context = canvas.getContext('2d')
+                            let w = img.width
+                            let h = img.height
+
+                            if (w > 1024) w = 480
+                            if (h > 1024) h = 480
+
+                            canvas.width = w
+                            canvas.height = h
+                            context.clearRect(0, 0, w, h);                            
+                            context.drawImage(img,0,0,w,h)
+                        }
+                        img.src = reader.result
+                    }
+                    reader.readAsDataURL(input.files[0])
+
+                    p.innerHTML = ''
+                    p.setAttribute('style', 'color: black;')
+
+                    image_loaded = true;
+                }
+            }catch(ex){
+                const canvas = document.querySelector('canvas')
+                const context = canvas.getContext('2d')
+                context.clearRect(0, 0, canvas.width, canvas.height);
+
+                image_loaded = false;
+
+                p.innerHTML = ''
+                p.setAttribute('style', 'color: black;')
+            }finally{
+                const classify_button = document.querySelector('#classify_button')
+                if (image_loaded){
+                    classify_button.disabled = false
+                }else{
+                    classify_button.disabled = true
+                }
+            }
+        }
+        
+        function send_to_server(){
+            const p = document.querySelector('#result')
+            p.innerHTML = ''
+
+            const canvas = document.querySelector('canvas')
+            canvas.toBlob(function (blob) {
+                const form = new FormData()
+                form.append('image',blob,'pic')
+
+                const xhr = new XMLHttpRequest()
+                xhr.open('POST','/imageupload',true)
+                xhr.onload = ()=>{            
+                    let prediction = xhr.responseText.trim()
+                    if (prediction === 'circle'){
+                        p.setAttribute('style','color: black;')
+                        p.innerHTML = 'Круг'
+                    }
+                    else if (prediction === 'polygon'){
+                        p.setAttribute('style','color: black')
+                        p.innerHTML = 'Многоугольник'
+                    }else{
+                        p.setAttribute('style','color: red')
+                        p.innerHTML = 'Неизвестная ошибка классификации'
+                        console.log("'" + xhr.responseText + "'")
+                    }
+                }
+                xhr.send(form)
+            })
+        }
+
+    </script>
+</body>
+</html>
