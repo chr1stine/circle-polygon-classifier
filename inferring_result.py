@@ -32,22 +32,18 @@ PATH = './figures_net.pth'
 net = Net()
 net.load_state_dict(torch.load(PATH))
 
-fname = 'pic.png'
+fname = './pic.png'
 
 img_size = 64
-# чтение картинки в чб
 img_array = cv2.imread(os.path.join('.', fname), cv2.IMREAD_GRAYSCALE)
 
-# масштабирование картинки под нейронку
 new_array = cv2.resize(img_array, (img_size, img_size))
-# из списка матриц пикселей картинки получаем матрицу списков пикселей картинок
 X = []
 for features in new_array:
     X.append(features)
 
 X = np.array(X).reshape(1, 1, img_size, img_size)
 
-# определение отклика
 tensorX = torch.Tensor(X[:1])
 outputs = net(tensorX)
 _, predicted = torch.max(outputs, 1)

@@ -25,7 +25,7 @@ const upload = multer({
   })
 
 async function classify(fname) {
-  const child = spawn('python', ["inferring_result.py"]);
+  const child = spawn('python3', ["inferring_result.py"]);
 
   let data = "";
   for await (const chunk of child.stdout) {
@@ -50,7 +50,7 @@ app.post('/imageupload',upload.single('image'),async function (req, res) {
   // сохранение картинки
     await sharp(req.file.buffer)
   .resize(64, 64)
-  .toFile('D:/Documents/8 семестр/нир/website/pic.png');
+  .toFile('./pic.png');
 
   // получение отклика и отправка в браузер
   classify('pic.png').then(
