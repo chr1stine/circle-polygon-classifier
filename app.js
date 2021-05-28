@@ -1,11 +1,16 @@
 const express = require('express')
-const { spawn } = require('child_process') // для запуска питона
+
+// для запуска питона
+const { spawn } = require('child_process')
+
+// для версионирования питона под aws ec2
+require('dotenv').config()
 
 // для скачивания картинки
 const multer = require('multer');
 const sharp = require('sharp');
 
-const PORT = process.env.PORT ?? 3000
+const PORT = 3000
 const app = express()
 
 app.use(express.static('.'))
@@ -25,8 +30,7 @@ const upload = multer({
   })
 
 async function classify(fname) {
-  const child = spawn('python3', ["inferring_result.py"]);
-
+  const child = spawn(process.env.PYVERSION, ["inferring_result.py"]);
   let data = "";
   for await (const chunk of child.stdout) {
       data += chunk;
@@ -46,7 +50,7 @@ async function classify(fname) {
 }
 
 app.post('/imageupload',upload.single('image'),async function (req, res) {
-    
+  
   // сохранение картинки
     await sharp(req.file.buffer)
   .resize(64, 64)
@@ -54,12 +58,16 @@ app.post('/imageupload',upload.single('image'),async function (req, res) {
 
   // получение отклика и отправка в браузер
   classify('pic.png').then(
-    data=> {      
+    data=> {          
       res.writeHead(200, "OK", {"Content-type":"text/plain"});
       res.write(data)
       res.end();
     },
-    err=>{console.error("async error:\n" + err);}
+    err=> {    
+      res.writeHead(200, "OK", {"Content-type":"text/plain"});
+      res.write('Картинка очень большая, не удаётся классифицировать')
+      res.end()
+    }
   );
   
   return res;
