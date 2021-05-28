@@ -9,10 +9,15 @@
 </head>
 <body>
     <div id="container">
-        <label for="filepath">Загрузите изображение для классификации:</label>
-        <input name="filepath" type="file" onchange="handle_picture()"/>
-        <button id='classify_button' onclick="send_to_server()" disabled='true'>Классифицировать</button>
+        <div id="box">
+            <label for="filepath">Загрузите изображение для классификации:</label>
+            <input name="filepath" type="file" onchange="handle_picture()"/>
+            
+            <button id='classify_button' onclick="send_to_server()" disabled='true'>Классифицировать</button>
+        </div>
+        
         <canvas width="0" height="0"></canvas>
+        
         <p id='result'></p>
     </div>
     <script>
