@@ -31,8 +31,8 @@ class Net(nn.Module):
 PATH = './figures_net.pth'
 net = Net()
 net.load_state_dict(torch.load(PATH))
-fname = 'pic12344.png'
-img_size = 64
+fname = 'pic.png'
+img_size = 128
 img_array = cv2.imread(os.path.join('.', fname), cv2.IMREAD_GRAYSCALE)
 new_array = cv2.resize(img_array, (img_size, img_size))
 X = []
