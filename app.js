@@ -1,11 +1,13 @@
 const express = require('express')
 const { spawn } = require('child_process') // для запуска питона
 
+require('dotenv').config() // для версионирования питона под aws ec2
+
 // для скачивания картинки
 const multer = require('multer');
 const sharp = require('sharp');
 
-const PORT = process.env.PORT ?? 3000
+const PORT = 3000
 const app = express()
 
 app.use(express.static('.'))
@@ -25,8 +27,7 @@ const upload = multer({
   })
 
 async function classify(fname) {
-  const child = spawn('python3', ["inferring_result.py"]);
-
+  const child = spawn(process.env.PORT, ["inferring_result.py"]);
   let data = "";
   for await (const chunk of child.stdout) {
       data += chunk;
