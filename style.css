@@ -2,12 +2,14 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 30rem;
 }
 
 #container{
     display: flex;
     flex-direction: column;
+    align-items: center;
+
+    margin-top: 5em;
 }
 
 #box { 
