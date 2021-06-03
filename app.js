@@ -53,7 +53,7 @@ app.post('/imageupload',upload.single('image'),async function (req, res) {
   
   // сохранение картинки
     await sharp(req.file.buffer)
-  .resize(64, 64)
+  .resize(256, 256)
   .toFile('./pic.png');
 
   // получение отклика и отправка в браузер
