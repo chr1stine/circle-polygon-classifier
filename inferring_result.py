@@ -34,7 +34,7 @@ X = []
 for features in new_array:
     X.append(features)
 X = np.array(X).reshape(img_size, img_size,1)
-tr = transforms.Compose([transforms.ToPILImage(),transforms.GaussianBlur(5,5),transforms.ToTensor()])
+tr = transforms.Compose([transforms.ToPILImage(),transforms.GaussianBlur(9,9),transforms.ToTensor()])
 tX = tr(X + np.array(torch.rand(img_size,img_size,1))).unsqueeze(1)
 output = net(tX).squeeze()
 classes = ['circle','square']
