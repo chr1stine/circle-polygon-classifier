@@ -38,5 +38,5 @@ tr = transforms.Compose([transforms.ToPILImage(),transforms.GaussianBlur(5,5),tr
 tX = tr(X + np.array(torch.rand(img_size,img_size,1))).unsqueeze(1)
 output = net(tX).squeeze()
 classes = ['circle','square']
-predicted = torch.heaviside(output-0.5,torch.tensor([1.])).int()
+predicted = torch.heaviside(output-0.4,torch.tensor([1.])).int()
 print(classes[predicted])
