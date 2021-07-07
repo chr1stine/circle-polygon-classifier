@@ -5,22 +5,27 @@ import numpy as np
 from torchvision import transforms
 import warnings
 warnings.filterwarnings("ignore")
-sigm = torch.nn.Sigmoid()
 class Net(torch.nn.Module):
     def __init__(self):
-        super(Net, self).__init__()                
+        super(Net, self).__init__()
         self.conv1 = torch.nn.Conv2d(1, 3, 3)
         self.pool = torch.nn.MaxPool2d(2, 2)
         self.conv2 = torch.nn.Conv2d(3, 6, 3)
         self.conv3 = torch.nn.Conv2d(6,12,3)
-        self.fc1 = torch.nn.Linear(12 * 14 * 14, 1)
-        self.dout = torch.nn.Dropout(0.5)    
+        self.conv4 = torch.nn.Conv2d(12,24,3)
+        self.fc1 = torch.nn.Linear(24 * 6 * 6, 25)
+        self.fc2 = torch.nn.Linear(25, 5)
+        self.fc3 = torch.nn.Linear(5, 1)
+        self.dout = torch.nn.Dropout(0.5)
     def forward(self, x):
         x = self.dout(self.pool(torch.nn.functional.relu(self.conv1(x))))
         x = self.dout(self.pool(torch.nn.functional.relu(self.conv2(x))))
         x = self.dout(self.pool(torch.nn.functional.relu(self.conv3(x))))
+        x = self.dout(self.pool(torch.nn.functional.relu(self.conv4(x))))
         x = torch.flatten(x,1)
-        x = sigm(self.fc1(x))
+        x = self.fc1(x)
+        x = self.fc2(x)
+        x = self.fc3(x)
         return x
 PATH = './figures_net.pth'
 net = Net()

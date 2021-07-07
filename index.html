@@ -99,7 +99,7 @@
                 form.append('image',blob,'pic')
 
                 const xhr = new XMLHttpRequest()
-                xhr.open('POST','/imageupload',true)
+                xhr.open('POST','/',true)
                 xhr.onload = ()=>{            
                     let prediction = xhr.responseText.trim()
                     if (prediction === 'circle'){

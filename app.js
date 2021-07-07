@@ -42,18 +42,17 @@ async function classify(fname) {
   const exitCode = await new Promise( (resolve, reject) => {
       child.on('close', resolve);
   });
-
   if( exitCode) {
       throw new Error( `subprocess error exit ${exitCode}, ${error}`);
   }
   return data.toString();
 }
 
-app.post('/imageupload',upload.single('image'),async function (req, res) {
+app.post('/',upload.single('image'),async function (req, res) {
   
   // сохранение картинки
     await sharp(req.file.buffer)
-  .resize(256, 256)
+  .resize(128, 128)
   .toFile('./pic.png');
 
   // получение отклика и отправка в браузер
